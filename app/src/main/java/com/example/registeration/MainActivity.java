@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ((tmp = bufferedReader.readLine()) != null) {
-                    Log.e(tmp,"1234");
                     stringBuilder.append(tmp + "\n");
                 }
                 bufferedReader.close();
@@ -152,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                     noticeContent = object.getString("noticeContent");
                     noticeName = object.getString("noticeName");
                     noticeDate = object.getString("noticeDate");
-                    Log.e("noticeContent",noticeContent);
                     Notice notice = new Notice(noticeContent,noticeName,noticeDate);
 
                     noticeList.add(notice);
