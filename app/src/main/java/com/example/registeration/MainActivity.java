@@ -170,8 +170,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         if(System.currentTimeMillis() - lastTimeBackPressed<1500){
+
+
             finish();
             return;
+
         }
         Toast.makeText(this,"'뒤로' 버튼을 한번 더 눌러 종료합니다.",Toast.LENGTH_SHORT);
         lastTimeBackPressed= System.currentTimeMillis();
