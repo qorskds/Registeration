@@ -21,6 +21,9 @@
         <item>교직소양</item>
     </string-array>
     <string-array name="year">
+        <item>2016년도</item>
+        <item>2017년도</item>
+        <item>2018년도</item>
         <item>2019년도</item>
         <item>2020년도</item>
         <item>2021년도</item>

@@ -106,7 +106,9 @@
             android:layout_height="match_parent"
             android:id="@+id/courseListView"
             android:dividerHeight="10dp"
-            android:divider="#ffffff"></ListView>
+            android:divider="#ffffff"
+            android:padding="5dp"
+            ></ListView>
 
     </LinearLayout>
 </LinearLayout>

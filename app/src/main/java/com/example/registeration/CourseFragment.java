@@ -166,7 +166,7 @@ public class CourseFragment extends Fragment {
 
         courseListView = (ListView)getView().findViewById(R.id.courseListView);
         courseList=new ArrayList<Course>();
-        adapter = new CourseListAdapter(getContext().getApplicationContext(),courseList);
+        adapter = new CourseListAdapter(getContext().getApplicationContext(),courseList,this);
         courseListView.setAdapter(adapter);
 
 
@@ -231,7 +231,7 @@ public class CourseFragment extends Fragment {
         @Override
         protected  void onPreExecute(){
             try {
-                target = "http://qorskd.cafe24.com/CourseList.php?courseUniversity ="+ URLEncoder.encode(courseUniversity,"UTF-8")+
+                target = "http://qorskd.cafe24.com/CourseList.php?courseUniversity="+URLEncoder.encode(courseUniversity,"UTF-8")+
                         "&courseYear="+URLEncoder.encode(yearSpinner.getSelectedItem().toString().substring(0,4),"UTF-8")
                         +"&courseTerm="+URLEncoder.encode(termSpinner.getSelectedItem().toString(),"UTF-8")
                         +"&courseArea="+URLEncoder.encode(areaSpinner.getSelectedItem().toString(),"UTF-8")+
@@ -274,6 +274,7 @@ public class CourseFragment extends Fragment {
                 courseList.clear();
                 JSONObject jsonObject =new JSONObject(s);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
+                Log.e("jsonArray",jsonArray.length()+"");
                 int count = 0;
                 int courseID;
                 String courseUniversity;
@@ -292,6 +293,7 @@ public class CourseFragment extends Fragment {
 
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
+
                     courseID = object.getInt("courseID");
                     courseUniversity = object.getString("courseUniversity");
                     courseYear = object.getInt("courseYear");
@@ -315,7 +317,7 @@ public class CourseFragment extends Fragment {
                 if(count==0){
                     AlertDialog dialog;
                     AlertDialog.Builder builder = new   AlertDialog.Builder(CourseFragment.this.getActivity());
-                    dialog = builder.setMessage(("조회 된 강의가 없습니다."))
+                    dialog = builder.setMessage(("조회 된 강의가 없습니다.\n날짜를 확인하세요"))
                             .setPositiveButton("확인", null).create();
                     dialog.show();
                 }

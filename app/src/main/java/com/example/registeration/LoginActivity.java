@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID= idText.getText().toString();
+                final String userID= idText.getText().toString();
                 String userPassword = passwordText.getText().toString();
 
                 Response.Listener<String> responseLinstener = new Response.Listener<String>() {
@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
                                         .create();
                                 dialog.show();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("userID",userID);
                                 LoginActivity.this.startActivity(intent);
                                 finish();
                             }else{
