@@ -2,13 +2,29 @@ package com.example.registeration;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -61,7 +77,109 @@ public class StatisticsFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private ListView courseListView;
+    private StatisticsCourseListAdapter adapter;
+    private List<Course> courseList;
 
+    public static int totalCredit = 0;
+    public static TextView credit;
+
+
+    @Override
+    public void onActivityCreated(Bundle b){
+        super.onActivityCreated(b);
+        courseListView= (ListView)getView().findViewById(R.id.courseListView);
+        courseList = new ArrayList<Course>();
+        adapter = new StatisticsCourseListAdapter(getContext().getApplicationContext(),courseList,this);
+        courseListView.setAdapter(adapter);
+        new BackgroundTask().execute();
+        totalCredit=0;
+        credit = (TextView) getView().findViewById(R.id.totalCredit);
+    }
+
+    class BackgroundTask extends AsyncTask<Void, Void ,String> {
+
+
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                target = "http://qorskd.cafe24.com/StatisticsCourseList.php?userID=" + URLEncoder.encode(MainActivity.userID, "UTF-8");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL(target);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String tmp;
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((tmp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(tmp + "\n");
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public void onProgressUpdate(Void... Values) {
+            super.onProgressUpdate();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray jsonArray = jsonObject.getJSONArray("response");
+                int count = 0;
+                int courseID;
+                String courseGrade;
+                String courseTitle;
+                int courseDivide;
+                int coursePersonnel;
+                int courseRival;
+
+                while (count < jsonArray.length()) {
+
+                    JSONObject object = jsonArray.getJSONObject(count);
+
+                    courseID = object.getInt("courseID");
+                    courseGrade = object.getString("courseGrade");
+                    courseTitle = object.getString("courseTitle");
+                    courseDivide = object.getInt("courseDivide");
+                    coursePersonnel = object.getInt("coursePersonnel");
+                    courseRival = object.getInt("COUNT(SCHEDULE.courseID)");
+                    int courseCredit= object.getInt("courseCredit");
+                    totalCredit += courseCredit;
+                    courseList.add(new Course(courseID, courseGrade, courseTitle, courseDivide, coursePersonnel, courseRival,courseCredit));
+
+                    count++;
+                }
+                adapter.notifyDataSetChanged();
+                credit.setText(totalCredit + "학점");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

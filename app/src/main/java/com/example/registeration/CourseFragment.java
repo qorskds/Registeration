@@ -274,7 +274,6 @@ public class CourseFragment extends Fragment {
                 courseList.clear();
                 JSONObject jsonObject =new JSONObject(s);
                 JSONArray jsonArray = jsonObject.getJSONArray("response");
-                Log.e("jsonArray",jsonArray.length()+"");
                 int count = 0;
                 int courseID;
                 String courseUniversity;

@@ -2,6 +2,7 @@ package com.example.registeration;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import android.content.Intent;
 import android.os.Bundle;

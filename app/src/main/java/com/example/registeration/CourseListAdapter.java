@@ -35,6 +35,7 @@ public class CourseListAdapter extends BaseAdapter {
     private String userID = MainActivity.userID;
     private Schedule schedule = new Schedule();
     private List<Integer> courseIDList;
+    public static int totalCredit = 0;
 
 
     public CourseListAdapter(Context context, List<Course> courseList, Fragment parent) {
@@ -44,6 +45,7 @@ public class CourseListAdapter extends BaseAdapter {
         schedule = new Schedule();
         courseIDList = new ArrayList<Integer>();
         new BackgroundTask().execute();
+        totalCredit = 0;
 
 
     }
@@ -108,7 +110,12 @@ public class CourseListAdapter extends BaseAdapter {
                     AlertDialog dialog = builder.setMessage(("이미 추가한 강의입니다..")).setPositiveButton("다시 시도", null).create();
                     dialog.show();
 
-                }else if(validate == false){
+                }else if(totalCredit+courseList.get(position).getCourseCredit()> 24){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(parent.getActivity());
+                    AlertDialog dialog = builder.setMessage(("24학점을 초과 할 수 없습니다.")).setPositiveButton("다시 시도", null).create();
+                    dialog.show();
+
+                } else if(validate == false){
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(parent.getActivity());
                     AlertDialog dialog = builder.setMessage(("시간표가 중복됩니다.")).setPositiveButton("다시 시도", null).create();
@@ -201,14 +208,17 @@ public class CourseListAdapter extends BaseAdapter {
                 String courseProfessor;
                 String courseTime;
                 int courseID;
+                totalCredit = 0;
                 while (count < jsonArray.length()){
 
                     JSONObject object = jsonArray.getJSONObject(count);
 
+
                     courseID = object.getInt("courseID");
                     courseTime = object.getString("courseTime");
                     courseProfessor = object.getString("courseProfessor");
-                     courseIDList.add(courseID);
+                    totalCredit += object.getInt("courseCredit");
+                    courseIDList.add(courseID);
                     schedule.addSchedule(courseTime);
 
                     count++;

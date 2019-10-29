@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/staticsButton"
-            android:text="통계"
+            android:text="강의 분석"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:textSize="18dp"

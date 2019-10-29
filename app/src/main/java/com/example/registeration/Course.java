@@ -15,6 +15,7 @@ public class Course {
     String courseProfessor;
     String courseTime;
     String courseRoom;
+    int courseRival;
 
     public int getCourseID() {
         return courseID;
@@ -126,6 +127,32 @@ public class Course {
 
     public void setCourseRoom(String courseRoom) {
         this.courseRoom = courseRoom;
+    }
+
+    public Course(int courseID, String courseGrade, String courseTitle, int courseDivide, int coursePersonnel, int courseRival) {
+        this.courseID = courseID;
+        this.courseGrade = courseGrade;
+        this.courseTitle = courseTitle;
+        this.courseDivide = courseDivide;
+        this.coursePersonnel = coursePersonnel;
+        this.courseRival = courseRival;
+    }
+    public Course(int courseID, String courseGrade, String courseTitle, int courseDivide, int coursePersonnel, int courseRival,int courseCredit) {
+        this.courseID = courseID;
+        this.courseGrade = courseGrade;
+        this.courseTitle = courseTitle;
+        this.courseDivide = courseDivide;
+        this.coursePersonnel = coursePersonnel;
+        this.courseRival = courseRival;
+        this.courseCredit = courseCredit;
+    }
+
+    public int getCourseRival() {
+        return courseRival;
+    }
+
+    public void setCourseRival(int courseRival) {
+        this.courseRival = courseRival;
     }
 
     public Course(int courseID, String courseUniversity, int courseYear, String courseTerm, String courseArea, String courseMajor, String courseGrade, String courseTitle, int courseCredit, int courseDivide, int coursePersonnel, String courseProfessor, String courseTime, String courseRoom) {
