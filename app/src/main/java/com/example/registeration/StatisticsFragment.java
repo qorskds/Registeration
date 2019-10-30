@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -84,6 +87,13 @@ public class StatisticsFragment extends Fragment {
     public static int totalCredit = 0;
     public static TextView credit;
 
+    private ArrayAdapter rankAdapter;
+    private Spinner rankSpinner;
+
+    private  ListView rankListView;
+    private RankListAdapter rankListAdapter;
+    private List<Course> rankList;
+
 
     @Override
     public void onActivityCreated(Bundle b){
@@ -95,9 +105,132 @@ public class StatisticsFragment extends Fragment {
         new BackgroundTask().execute();
         totalCredit=0;
         credit = (TextView) getView().findViewById(R.id.totalCredit);
+        rankSpinner= (Spinner)getView().findViewById(R.id.rankSpinner);
+        rankAdapter = ArrayAdapter.createFromResource(getActivity(),R.array.rank,R.layout.spinner_item);
+        rankSpinner.setAdapter(rankAdapter);
+
+        rankSpinner.setPopupBackgroundResource(R.color.colorPrimary);
+
+        rankListView =(ListView)getView().findViewById(R.id.rankListView);
+        rankList= new ArrayList<Course>();
+        rankListAdapter = new RankListAdapter(getContext().getApplicationContext(),rankList,this);
+        rankListView.setAdapter(rankListAdapter);
+        new ByEntire().execute();
+
+        rankSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(rankSpinner.getSelectedItem().equals("전체에서")){
+
+                }else if(rankSpinner.getSelectedItem().equals("우리과에서")){
+
+                }else if(rankSpinner.getSelectedItem().equals("남자 선호도")){
+
+                }else if(rankSpinner.getSelectedItem().equals("여자 선호도")){
+
+                }else if(rankSpinner.getSelectedItem().equals("전공 인기도")){
+
+                }else if(rankSpinner.getSelectedItem().equals("교양 인기도")){
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
     }
 
-    class BackgroundTask extends AsyncTask<Void, Void ,String> {
+    class ByEntire extends AsyncTask<Void, Void ,String> {
+
+
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                target = "http://qorskd.cafe24.com/ByEntire.php" ;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL(target);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String tmp;
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((tmp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(tmp + "\n");
+                }
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        public void onProgressUpdate(Void... Values) {
+            super.onProgressUpdate();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+                JSONArray jsonArray = jsonObject.getJSONArray("response");
+                int count = 0;
+                int courseID;
+                String courseGrade;
+                String courseTitle;
+                String courseProfessor;
+                int courseCredit;
+                int courseDivide;
+                int coursePersonnel;
+                String courseTime;
+
+                while (count < jsonArray.length()) {
+
+                    JSONObject object = jsonArray.getJSONObject(count);
+
+                    courseID = object.getInt("courseID");
+                    courseGrade = object.getString("courseGrade");
+                    courseTitle = object.getString("courseTitle");
+                    courseProfessor = object.getString("courseProfessor");
+                    courseCredit = object.getInt("courseCredit");
+                    courseDivide = object.getInt("courseDivide");
+                    coursePersonnel = object.getInt("coursePersonnel");
+                    courseTime = object.getString("courseTime");
+                    Log.e("courseTime",courseTime);
+
+                    rankList.add(new Course(courseID,  courseGrade,  courseTitle,  courseCredit,  courseDivide,  coursePersonnel,courseTime,courseProfessor));
+                    count++;
+                }
+                rankListAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+        class BackgroundTask extends AsyncTask<Void, Void ,String> {
 
 
         String target;
