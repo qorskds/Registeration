@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".RegisterActivity"
+    android:background="@color/colorBackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -126,14 +127,14 @@
                     <RadioButton
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="여성"
+                        android:text="여자"
                         android:id="@+id/genderWoman"
                         android:layout_weight="1"
                         android:checked="true"/>
                     <RadioButton
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="남성"
+                    android:text="남자"
                     android:id="@+id/genderMan"
                     android:layout_weight="1"/>
 
